@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PMS 443 — Surface Fleet Cyber RMF Command Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+  <div class="scanline"></div>
+  <div class="hud-grid"></div>
+
+  <!-- Classification banner -->
+  <div class="class-banner">UNCLASSIFIED // FOR TRAINING & DEMO USE ONLY — FAKE eMASS DATA — PMS 443 SURFACE SHIP SUSTAINMENT</div>
+
+  <!-- TOP HUD BAR -->
+  <header class="top-bar">
+    <div class="logo-area">
+      <div class="logo-icon">
+        <svg viewBox="0 0 40 40" class="logo-svg">
+          <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M8 22 L20 8 L32 22 Z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="20" cy="24" r="4" fill="currentColor"/>
+        </svg>
+      </div>
+      <div>
+        <h1>PMS 443 <span>SURFACE FLEET CYBER RMF</span></h1>
+        <p class="subtitle">Command Dashboard · eMASS / NIST RMF · Surface Ship Sustainment</p>
+      </div>
+    </div>
+
+    <div class="filters">
+      <div class="filter-group">
+        <label>SHIP CLASS</label>
+        <select id="shipClassFilter">
+          <option value="all">ALL CLASSES</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>HULL NUMBER</label>
+        <select id="hullFilter">
+          <option value="all">ALL HULLS</option>
+        </select>
+      </div>
+      <button class="btn-clear-zone" id="btnClearZone" title="Clear compartment filter" style="display:none">
+        <i class="fas fa-times"></i> CLEAR ZONE
+      </button>
+    </div>
+
+    <div class="top-actions">
+      <div class="hud-clock" id="hudClock">--</div>
+      <div class="user-profile" title="Logged-in role">
+        <i class="fas fa-user-shield"></i>
+        <div>
+          <span class="user-role">ISSO / ISSM Admin</span>
+          <span class="user-org">PMS 443 · NAVSEA</span>
+        </div>
+      </div>
+      <button class="btn-upload" id="btnUploadData" title="Upload eMASS XML/Excel (POA&Ms, Controls)">
+        <i class="fas fa-cloud-upload-alt"></i> DATA
+      </button>
+      <button class="btn-upload secondary" id="btnUploadArtifact" title="Upload package artifacts for RAG">
+        <i class="fas fa-file-upload"></i> ARTIFACTS
+      </button>
+      <input type="file" id="fileData" multiple accept=".xlsx,.xls,.csv,.json,.xml,.pdf" hidden />
+      <input type="file" id="fileArtifact" multiple accept=".pdf,.docx,.txt,.json,.xml,.csv,.xlsx" hidden />
+      <button class="btn-ai" id="btnToggleChat">
+        <i class="fas fa-robot"></i> eMASS AI
+      </button>
+      <div class="status-indicator">
+        <span class="pulse"></span> LIVE
+      </div>
+    </div>
+  </header>
+
+  <!-- RMF STATUS PIPELINE -->
+  <section class="rmf-pipeline" id="rmfPipeline">
+    <!-- populated by JS -->
+  </section>
+
+  <!-- KPI STRIP -->
+  <section class="kpi-strip" id="kpiStrip">
+    <!-- populated by JS -->
+  </section>
+
+  <!-- MAIN LAYOUT -->
+  <main class="main-layout">
+    <!-- LEFT NAV / STATUS TRACKER -->
+    <aside class="left-panel">
+      <div class="panel-header">
+        <i class="fas fa-ship"></i> FLEET STATUS
+      </div>
+      <div class="status-tracker" id="statusTracker"></div>
+      <div class="panel-header mt">
+        <i class="fas fa-exclamation-triangle"></i> RISK ALERTS
+      </div>
+      <div class="alerts-list" id="alertsList"></div>
+      <div class="panel-header mt">
+        <i class="fas fa-file-alt"></i> ARTIFACT DROP
+      </div>
+      <div class="drop-zone" id="dropZone">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>Drop eMASS XML / Excel / SSP here</p>
+        <span>or click to browse</span>
+      </div>
+    </aside>
+
+    <!-- CENTER CONTENT -->
+    <section class="center-panel">
+      <nav class="tab-nav" id="tabNav">
+        <button class="tab active" data-tab="portfolio"><i class="fas fa-th-large"></i> Portfolio</button>
+        <button class="tab" data-tab="hullmap"><i class="fas fa-map"></i> Hull Map</button>
+        <button class="tab" data-tab="poam"><i class="fas fa-clipboard-list"></i> Controls & POA&M</button>
+        <button class="tab" data-tab="analytics"><i class="fas fa-chart-line"></i> Trend & Risk</button>
+        <button class="tab" data-tab="assets"><i class="fas fa-server"></i> Asset Inventory</button>
+        <button class="tab" data-tab="mitigation"><i class="fas fa-tasks"></i> Mitigations</button>
+      </nav>
+
+      <div class="zone-filter-banner" id="zoneFilterBanner" style="display:none"></div>
+      <div class="tab-content" id="tabContent"></div>
+    </section>
+
+    <!-- RIGHT PANEL -->
+    <aside class="right-panel" id="rightPanel">
+      <div class="panel-header">
+        <i class="fas fa-search-plus"></i> EXPLORE
+        <button class="close-panel" id="closeRight">×</button>
+      </div>
+      <div class="explore-content" id="exploreContent">
+        <div class="empty-state">
+          <i class="fas fa-mouse-pointer"></i>
+          <p>Click any KPI, ship, hull compartment, POA&M, control, or asset to drill deeper.</p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- AI CHAT DRAWER -->
+  <div class="chat-drawer" id="chatDrawer">
+    <div class="chat-header">
+      <span><i class="fas fa-robot"></i> eMASS AI Navigator</span>
+      <button id="closeChat">×</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg bot">
+        <strong>eMASS AI Navigator online.</strong><br>
+        I can query POA&Ms, NIST SP 800-53 controls, hull assets, predictive risk, and uploaded package artifacts for PMS 443 surface fleet packages.<br><br>
+        Try: <em>"What is our mitigation strategy for the failed IA-2 controls on DDG-51?"</em>
+      </div>
+    </div>
+    <div class="chat-suggestions">
+      <button type="button" data-q="What is our mitigation strategy for the failed IA-2 controls on DDG-51?">IA-2 DDG-51</button>
+      <button type="button" data-q="Show critical open POAMs">Critical POAMs</button>
+      <button type="button" data-q="Predictive risk forecast">Risk forecast</button>
+      <button type="button" data-q="List package artifacts">Artifacts</button>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Query eMASS / RMF package documentation…" />
+      <button id="chatSend"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Details</h3>
+        <button id="closeModal">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

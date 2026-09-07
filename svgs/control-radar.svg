@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" width="560" height="560">
+  <rect width="280" height="280" fill="#0a1220"/>
+  <circle cx="140" cy="140" r="100" fill="none" stroke="#1a2d45"/>
+  <circle cx="140" cy="140" r="66" fill="none" stroke="#1a2d45"/>
+  <circle cx="140" cy="140" r="33" fill="none" stroke="#1a2d45"/>
+  <!-- sample polygon for families -->
+  <polygon points="140,50 200,80 220,150 180,210 100,210 60,150 80,80"
+    fill="rgba(0,229,255,0.15)" stroke="#00e5ff" stroke-width="1.5"/>
+  <circle cx="140" cy="50" r="4" fill="#00e5ff"/>
+  <text x="140" y="35" text-anchor="middle" fill="#7a8ba8" font-size="8">Access</text>
+  <circle cx="200" cy="80" r="4" fill="#00e5ff"/>
+  <text x="225" y="75" text-anchor="middle" fill="#7a8ba8" font-size="8">Audit</text>
+  <circle cx="220" cy="150" r="4" fill="#00e5ff"/>
+  <text x="245" y="155" text-anchor="middle" fill="#7a8ba8" font-size="8">Assess</text>
+  <circle cx="180" cy="210" r="4" fill="#00e5ff"/>
+  <text x="180" y="235" text-anchor="middle" fill="#7a8ba8" font-size="8">Config</text>
+  <circle cx="100" cy="210" r="4" fill="#00e5ff"/>
+  <text x="100" y="235" text-anchor="middle" fill="#7a8ba8" font-size="8">Ident</text>
+  <circle cx="60" cy="150" r="4" fill="#00e5ff"/>
+  <text x="35" y="155" text-anchor="middle" fill="#7a8ba8" font-size="8">System</text>
+  <circle cx="80" cy="80" r="4" fill="#00e5ff"/>
+  <text x="55" y="75" text-anchor="middle" fill="#7a8ba8" font-size="8">Protect</text>
+  <text x="140" y="145" text-anchor="middle" fill="#00e5ff" font-size="10" font-family="Orbitron,sans-serif">NIST</text>
+  <text x="140" y="158" text-anchor="middle" fill="#7a8ba8" font-size="8">800-53</text>
+</svg>

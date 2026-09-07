@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 400" width="1120" height="800">
+  <rect width="560" height="400" fill="#0a1220"/>
+  <defs>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <!-- center -->
+  <circle cx="280" cy="200" r="36" fill="#111b2a" stroke="#00e5ff" stroke-width="2" filter="url(#glow)"/>
+  <text x="280" y="196" text-anchor="middle" fill="#00e5ff" font-size="11" font-family="Orbitron, sans-serif">PMS 443</text>
+  <text x="280" y="212" text-anchor="middle" fill="#7a8ba8" font-size="9" font-family="sans-serif">SURFACE</text>
+  <!-- nodes: ddg, cg, lpd, lcs, lhd, ffg at angles -->
+  <!-- DDG (critical-ish) angle -90° top -->
+  <line x1="280" y1="200" x2="280" y2="70" stroke="#1a2d45" stroke-width="1.5"/>
+  <circle cx="280" cy="70" r="28" fill="#111b2a" stroke="#ff3b5c" stroke-width="2"/>
+  <text x="280" y="66" text-anchor="middle" fill="#e8f0ff" font-size="10" font-weight="700" font-family="sans-serif">DDG</text>
+  <text x="280" y="80" text-anchor="middle" fill="#7a8ba8" font-size="9">5 hull</text>
+  <!-- CG -->
+  <line x1="280" y1="200" x2="418.6" y2="135" stroke="#1a2d45" stroke-width="1.5"/>
+  <circle cx="418.6" cy="135" r="28" fill="#111b2a" stroke="#ffb800" stroke-width="2"/>
+  <text x="418.6" y="131" text-anchor="middle" fill="#e8f0ff" font-size="10" font-weight="700">CG</text>
+  <text x="418.6" y="145" text-anchor="middle" fill="#7a8ba8" font-size="9">2 hull</text>
+  <!-- LPD -->
+  <line x1="280" y1="200" x2="418.6" y2="265" stroke="#1a2d45" stroke-width="1.5"/>
+  <circle cx="418.6" cy="265" r="28" fill="#111b2a" stroke="#ffb800" stroke-width="2"/>
+  <text x="418.6" y="261" text-anchor="middle" fill="#e8f0ff" font-size="10" font-weight="700">LPD</text>
+  <text x="418.6" y="275" text-anchor="middle" fill="#7a8ba8" font-size="9">2 hull</text>
+  <!-- LCS -->
+  <line x1="280" y1="200" x2="280" y2="330" stroke="#1a2d45" stroke-width="1.5"/>
+  <circle cx="280" cy="330" r="28" fill="#111b2a" stroke="#ffb800" stroke-width="2"/>
+  <text x="280" y="326" text-anchor="middle" fill="#e8f0ff" font-size="10" font-weight="700">LCS</text>
+  <text x="280" y="340" text-anchor="middle" fill="#7a8ba8" font-size="9">2 hull</text>
+  <!-- LHD -->
+  <line x1="280" y1="200" x2="141.4" y2="265" stroke="#1a2d45" stroke-width="1.5"/>
+  <circle cx="141.4" cy="265" r="28" fill="#111b2a" stroke="#00e5ff" stroke-width="2"/>
+  <text x="141.4" y="261" text-anchor="middle" fill="#e8f0ff" font-size="10" font-weight="700">LHD</text>
+  <text x="141.4" y="275" text-anchor="middle" fill="#7a8ba8" font-size="9">1 hull</text>
+  <!-- FFG -->
+  <line x1="280" y1="200" x2="141.4" y2="135" stroke="#1a2d45" stroke-width="1.5"/>
+  <circle cx="141.4" cy="135" r="28" fill="#111b2a" stroke="#00ff9d" stroke-width="2"/>
+  <text x="141.4" y="131" text-anchor="middle" fill="#e8f0ff" font-size="10" font-weight="700">FFG</text>
+  <text x="141.4" y="145" text-anchor="middle" fill="#7a8ba8" font-size="9">1 hull</text>
+  <text x="280" y="385" text-anchor="middle" fill="#7a8ba8" font-size="10">Fleet Risk Topology · click nodes to filter class</text>
+</svg>

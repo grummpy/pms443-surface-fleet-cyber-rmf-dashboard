@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="240" height="240">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5ff"/>
+      <stop offset="100%" stop-color="#0077ff"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="120" height="120" rx="16" fill="#0a1220"/>
+  <circle cx="60" cy="60" r="48" fill="none" stroke="url(#g)" stroke-width="3" filter="url(#glow)"/>
+  <path d="M28 66 L60 24 L92 66 Z" fill="none" stroke="url(#g)" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="60" cy="72" r="10" fill="#00e5ff" filter="url(#glow)"/>
+  <text x="60" y="108" text-anchor="middle" fill="#7a8ba8" font-family="ui-monospace,monospace" font-size="8">PMS 443</text>
+</svg>

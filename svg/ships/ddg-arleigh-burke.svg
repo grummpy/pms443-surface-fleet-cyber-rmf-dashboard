@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" width="1280" height="440">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a1524"/>
+      <stop offset="100%" stop-color="#050a12"/>
+    </linearGradient>
+    <linearGradient id="hull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a2d45"/>
+      <stop offset="100%" stop-color="#0d1624"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="640" height="220" rx="10" fill="url(#bg)"/>
+  <text x="24" y="28" fill="#00e5ff" font-family="ui-monospace,monospace" font-size="14" font-weight="700">DDG · ARLEIGH BURKE</text>
+  <text x="24" y="46" fill="#7a8ba8" font-family="ui-monospace,monospace" font-size="10">DESTROYER · FLIGHT IIA / III · AEGIS</text>
+  <!-- waterline -->
+  <line x1="20" y1="170" x2="620" y2="170" stroke="#1a3a50" stroke-width="1" stroke-dasharray="4 4"/>
+  <!-- hull -->
+  <path d="M40 165 L70 145 L120 138 L520 138 L580 148 L600 165 L580 175 L80 175 Z"
+        fill="url(#hull)" stroke="#00e5ff" stroke-width="2" filter="url(#glow)"/>
+  <!-- bow rake detail -->
+  <path d="M40 165 L70 145 L90 145" fill="none" stroke="#00a8b8" stroke-width="1.2"/>
+  <!-- VLS fwd -->
+  <rect x="130" y="128" width="70" height="10" rx="1" fill="#111b2a" stroke="#00e5ff" stroke-width="1"/>
+  <g stroke="#00a8b8" stroke-width="0.6">
+    <line x1="140" y1="128" x2="140" y2="138"/><line x1="150" y1="128" x2="150" y2="138"/>
+    <line x1="160" y1="128" x2="160" y2="138"/><line x1="170" y1="128" x2="170" y2="138"/>
+    <line x1="180" y1="128" x2="180" y2="138"/><line x1="190" y1="128" x2="190" y2="138"/>
+  </g>
+  <!-- superstructure -->
+  <path d="M210 138 L220 110 L280 100 L340 100 L360 115 L370 138 Z"
+        fill="#152233" stroke="#00e5ff" stroke-width="1.6"/>
+  <!-- SPY-1/6 faces -->
+  <rect x="235" y="108" width="22" height="18" rx="1" fill="#0a2030" stroke="#00ff9d" stroke-width="1.2"/>
+  <rect x="300" y="108" width="22" height="18" rx="1" fill="#0a2030" stroke="#00ff9d" stroke-width="1.2"/>
+  <!-- bridge -->
+  <rect x="255" y="95" width="50" height="12" rx="2" fill="#1a3048" stroke="#00e5ff" stroke-width="1.2"/>
+  <!-- mast -->
+  <line x1="280" y1="95" x2="280" y2="55" stroke="#00e5ff" stroke-width="1.5" filter="url(#glow)"/>
+  <line x1="265" y1="70" x2="295" y2="70" stroke="#00a8b8" stroke-width="1"/>
+  <circle cx="280" cy="55" r="4" fill="none" stroke="#00e5ff" stroke-width="1.2"/>
+  <!-- stack -->
+  <rect x="360" y="115" width="28" height="23" rx="2" fill="#152233" stroke="#7a8ba8" stroke-width="1"/>
+  <rect x="365" y="108" width="8" height="8" fill="#111b2a" stroke="#ffb800" stroke-width="0.8"/>
+  <rect x="376" y="108" width="8" height="8" fill="#111b2a" stroke="#ffb800" stroke-width="0.8"/>
+  <!-- aft VLS -->
+  <rect x="410" y="128" width="50" height="10" rx="1" fill="#111b2a" stroke="#00e5ff" stroke-width="1"/>
+  <!-- hangar / helo deck -->
+  <rect x="470" y="128" width="55" height="10" rx="1" fill="#152233" stroke="#00a8b8" stroke-width="1"/>
+  <text x="497" y="136" text-anchor="middle" fill="#7a8ba8" font-size="7" font-family="ui-monospace,monospace">HELO</text>
+  <!-- 5" gun -->
+  <rect x="100" y="132" width="22" height="6" rx="1" fill="#1a2d45" stroke="#7a8ba8" stroke-width="1"/>
+  <line x1="100" y1="135" x2="85" y2="132" stroke="#7a8ba8" stroke-width="2"/>
+  <!-- labels -->
+  <text x="165" y="195" text-anchor="middle" fill="#7a8ba8" font-size="9" font-family="ui-monospace,monospace">VLS</text>
+  <text x="280" y="195" text-anchor="middle" fill="#7a8ba8" font-size="9" font-family="ui-monospace,monospace">SUPERSTRUCTURE</text>
+  <text x="435" y="195" text-anchor="middle" fill="#7a8ba8" font-size="9" font-family="ui-monospace,monospace">AFT VLS</text>
+  <text x="600" y="28" text-anchor="end" fill="#ff3b5c" font-size="11" font-family="ui-monospace,monospace">RISK: HIGH+</text>
+</svg>

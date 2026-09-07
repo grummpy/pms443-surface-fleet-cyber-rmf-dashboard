@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" width="1280" height="440">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a1524"/><stop offset="100%" stop-color="#050a12"/>
+    </linearGradient>
+    <linearGradient id="hull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a2d45"/><stop offset="100%" stop-color="#0d1624"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="640" height="220" rx="10" fill="url(#bg)"/>
+  <text x="24" y="28" fill="#00e5ff" font-family="ui-monospace,monospace" font-size="14" font-weight="700">LCS · FREEDOM / INDEPENDENCE</text>
+  <text x="24" y="46" fill="#7a8ba8" font-family="ui-monospace,monospace" font-size="10">LITTORAL COMBAT SHIP · MODULAR MISSION</text>
+  <line x1="20" y1="170" x2="620" y2="170" stroke="#1a3a50" stroke-width="1" stroke-dasharray="4 4"/>
+  <!-- angular stealth hull (shorter) -->
+  <path d="M90 165 L130 140 L180 132 L480 132 L540 145 L560 165 L530 172 L110 172 Z"
+        fill="url(#hull)" stroke="#ffb800" stroke-width="2" filter="url(#glow)"/>
+  <!-- angular superstructure -->
+  <path d="M240 132 L250 95 L290 85 L360 85 L390 100 L400 132 Z"
+        fill="#152233" stroke="#ffb800" stroke-width="1.6"/>
+  <rect x="280" y="88" width="55" height="10" rx="1" fill="#1a3048" stroke="#00e5ff" stroke-width="1"/>
+  <!-- single mast -->
+  <line x1="320" y1="85" x2="320" y2="48" stroke="#ffb800" stroke-width="1.5" filter="url(#glow)"/>
+  <line x1="305" y1="60" x2="335" y2="60" stroke="#00a8b8" stroke-width="1"/>
+  <circle cx="320" cy="48" r="3.5" fill="none" stroke="#00e5ff" stroke-width="1"/>
+  <!-- 57mm gun -->
+  <rect x="195" y="126" width="16" height="6" fill="#1a2d45" stroke="#7a8ba8" stroke-width="1"/>
+  <line x1="195" y1="129" x2="175" y2="126" stroke="#7a8ba8" stroke-width="2"/>
+  <!-- mission bay / helo -->
+  <rect x="420" y="122" width="70" height="10" rx="1" fill="#111b2a" stroke="#00e5ff" stroke-width="1"/>
+  <text x="455" y="130" text-anchor="middle" fill="#7a8ba8" font-size="7" font-family="ui-monospace,monospace">MISSION / HELO</text>
+  <text x="600" y="28" text-anchor="end" fill="#ffb800" font-size="11" font-family="ui-monospace,monospace">RISK: HIGH</text>
+  <text x="320" y="195" text-anchor="middle" fill="#7a8ba8" font-size="9" font-family="ui-monospace,monospace">STEALTH PROFILE · HIGH SPEED</text>
+</svg>

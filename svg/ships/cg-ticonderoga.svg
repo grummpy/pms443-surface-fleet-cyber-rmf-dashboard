@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" width="1280" height="440">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a1524"/><stop offset="100%" stop-color="#050a12"/>
+    </linearGradient>
+    <linearGradient id="hull" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a2d45"/><stop offset="100%" stop-color="#0d1624"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="640" height="220" rx="10" fill="url(#bg)"/>
+  <text x="24" y="28" fill="#00e5ff" font-family="ui-monospace,monospace" font-size="14" font-weight="700">CG · TICONDEROGA</text>
+  <text x="24" y="46" fill="#7a8ba8" font-family="ui-monospace,monospace" font-size="10">GUIDED-MISSILE CRUISER · AEGIS</text>
+  <line x1="20" y1="170" x2="620" y2="170" stroke="#1a3a50" stroke-width="1" stroke-dasharray="4 4"/>
+  <path d="M35 165 L65 142 L110 135 L530 135 L585 148 L605 165 L580 176 L70 176 Z"
+        fill="url(#hull)" stroke="#ffb800" stroke-width="2" filter="url(#glow)"/>
+  <!-- twin 5" guns -->
+  <rect x="95" y="128" width="18" height="7" fill="#1a2d45" stroke="#7a8ba8" stroke-width="1"/>
+  <line x1="95" y1="131" x2="78" y2="128" stroke="#7a8ba8" stroke-width="2"/>
+  <rect x="500" y="128" width="18" height="7" fill="#1a2d45" stroke="#7a8ba8" stroke-width="1"/>
+  <line x1="518" y1="131" x2="535" y2="128" stroke="#7a8ba8" stroke-width="2"/>
+  <!-- VLS blocks -->
+  <rect x="125" y="125" width="80" height="10" rx="1" fill="#111b2a" stroke="#ffb800" stroke-width="1"/>
+  <rect x="420" y="125" width="70" height="10" rx="1" fill="#111b2a" stroke="#ffb800" stroke-width="1"/>
+  <!-- boxy superstructure -->
+  <path d="M215 135 L220 95 L250 85 L380 85 L400 100 L410 135 Z"
+        fill="#152233" stroke="#ffb800" stroke-width="1.6"/>
+  <!-- large SPY faces -->
+  <rect x="240" y="95" width="28" height="24" rx="1" fill="#0a2030" stroke="#00ff9d" stroke-width="1.4"/>
+  <rect x="340" y="95" width="28" height="24" rx="1" fill="#0a2030" stroke="#00ff9d" stroke-width="1.4"/>
+  <rect x="255" y="78" width="90" height="10" rx="2" fill="#1a3048" stroke="#ffb800" stroke-width="1.2"/>
+  <!-- twin stacks -->
+  <rect x="300" y="100" width="18" height="35" rx="2" fill="#152233" stroke="#7a8ba8" stroke-width="1"/>
+  <rect x="325" y="100" width="18" height="35" rx="2" fill="#152233" stroke="#7a8ba8" stroke-width="1"/>
+  <!-- mast -->
+  <line x1="295" y1="78" x2="295" y2="45" stroke="#ffb800" stroke-width="1.5" filter="url(#glow)"/>
+  <line x1="280" y1="58" x2="310" y2="58" stroke="#00a8b8" stroke-width="1"/>
+  <circle cx="295" cy="45" r="4" fill="none" stroke="#ffb800" stroke-width="1.2"/>
+  <text x="600" y="28" text-anchor="end" fill="#ffb800" font-size="11" font-family="ui-monospace,monospace">RISK: HIGH</text>
+  <text x="165" y="195" text-anchor="middle" fill="#7a8ba8" font-size="9" font-family="ui-monospace,monospace">FWD VLS</text>
+  <text x="310" y="195" text-anchor="middle" fill="#7a8ba8" font-size="9" font-family="ui-monospace,monospace">AEGIS DECKHOUSE</text>
+  <text x="455" y="195" text-anchor="middle" fill="#7a8ba8" font-size="9" font-family="ui-monospace,monospace">AFT VLS</text>
+</svg>

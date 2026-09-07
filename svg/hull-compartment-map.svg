@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 340" width="1120" height="680">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="80%">
+      <stop offset="0%" stop-color="#122038"/>
+      <stop offset="100%" stop-color="#070d16"/>
+    </radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="560" height="340" rx="12" fill="url(#bg)"/>
+  <text x="24" y="28" fill="#00e5ff" font-family="Orbitron,ui-sans-serif,system-ui" font-size="14" font-weight="700">HULL COMPARTMENT MAP</text>
+  <text x="24" y="46" fill="#7a8ba8" font-family="ui-monospace,monospace" font-size="10">Top-down destroyer silhouette · risk-colored zones · FLEET COMPOSITE</text>
+
+  <!-- Hull outline -->
+  <path d="M50,180 L100,80 L210,55 L360,55 L450,90 L530,170 L505,255 L320,280 L140,280 L50,220 Z"
+        fill="rgba(17,27,42,0.95)" stroke="#00a8b8" stroke-width="2.5" filter="url(#glow)"/>
+
+  <!-- Compartments: id, x,y,w,h,label,risk fill/stroke -->
+  <!-- bridge high -->
+  <g>
+    <rect x="230" y="45" width="90" height="38" rx="5" fill="rgba(255,184,0,0.28)" stroke="#ffb800" stroke-width="1.8"/>
+    <text x="275" y="69" text-anchor="middle" fill="#e8f0ff" font-size="11" font-family="ui-monospace,monospace">BRIDGE</text>
+  </g>
+  <!-- CIC critical -->
+  <g>
+    <rect x="210" y="95" width="130" height="52" rx="5" fill="rgba(255,59,92,0.35)" stroke="#ff3b5c" stroke-width="2"/>
+    <text x="275" y="126" text-anchor="middle" fill="#e8f0ff" font-size="12" font-family="ui-monospace,monospace" font-weight="700">CIC</text>
+  </g>
+  <!-- RADIO high -->
+  <g>
+    <rect x="350" y="95" width="75" height="42" rx="5" fill="rgba(255,184,0,0.28)" stroke="#ffb800" stroke-width="1.8"/>
+    <text x="387.5" y="121" text-anchor="middle" fill="#e8f0ff" font-size="10" font-family="ui-monospace,monospace">RADIO</text>
+  </g>
+  <!-- FWD EQ high -->
+  <g>
+    <rect x="105" y="105" width="95" height="48" rx="5" fill="rgba(255,184,0,0.28)" stroke="#ffb800" stroke-width="1.8"/>
+    <text x="152.5" y="134" text-anchor="middle" fill="#e8f0ff" font-size="10" font-family="ui-monospace,monospace">FWD EQ</text>
+  </g>
+  <!-- SONAR moderate -->
+  <g>
+    <rect x="55" y="170" width="75" height="42" rx="5" fill="rgba(0,229,255,0.2)" stroke="#00e5ff" stroke-width="1.8"/>
+    <text x="92.5" y="196" text-anchor="middle" fill="#e8f0ff" font-size="10" font-family="ui-monospace,monospace">SONAR</text>
+  </g>
+  <!-- SERVER critical -->
+  <g>
+    <rect x="210" y="160" width="110" height="48" rx="5" fill="rgba(255,59,92,0.35)" stroke="#ff3b5c" stroke-width="2"/>
+    <text x="265" y="189" text-anchor="middle" fill="#e8f0ff" font-size="11" font-family="ui-monospace,monospace" font-weight="700">SERVER</text>
+  </g>
+  <!-- ADMIN moderate -->
+  <g>
+    <rect x="330" y="160" width="85" height="42" rx="5" fill="rgba(0,229,255,0.2)" stroke="#00e5ff" stroke-width="1.8"/>
+    <text x="372.5" y="186" text-anchor="middle" fill="#e8f0ff" font-size="10" font-family="ui-monospace,monospace">ADMIN</text>
+  </g>
+  <!-- MAG moderate -->
+  <g>
+    <rect x="170" y="230" width="95" height="42" rx="5" fill="rgba(0,229,255,0.2)" stroke="#00e5ff" stroke-width="1.8"/>
+    <text x="217.5" y="256" text-anchor="middle" fill="#e8f0ff" font-size="10" font-family="ui-monospace,monospace">MAG / VLS</text>
+  </g>
+  <!-- MACH high -->
+  <g>
+    <rect x="275" y="230" width="115" height="48" rx="5" fill="rgba(255,184,0,0.28)" stroke="#ffb800" stroke-width="1.8"/>
+    <text x="332.5" y="259" text-anchor="middle" fill="#e8f0ff" font-size="11" font-family="ui-monospace,monospace">MACH / OT</text>
+  </g>
+  <!-- HANGAR low -->
+  <g>
+    <rect x="410" y="210" width="95" height="58" rx="5" fill="rgba(0,255,157,0.2)" stroke="#00ff9d" stroke-width="1.8"/>
+    <text x="457.5" y="244" text-anchor="middle" fill="#e8f0ff" font-size="10" font-family="ui-monospace,monospace">HANGAR</text>
+  </g>
+
+  <!-- legend -->
+  <g font-family="ui-monospace,monospace" font-size="10">
+    <circle cx="40" cy="315" r="5" fill="#ff3b5c"/><text x="52" y="319" fill="#7a8ba8">critical</text>
+    <circle cx="140" cy="315" r="5" fill="#ffb800"/><text x="152" y="319" fill="#7a8ba8">high</text>
+    <circle cx="220" cy="315" r="5" fill="#00e5ff"/><text x="232" y="319" fill="#7a8ba8">moderate</text>
+    <circle cx="330" cy="315" r="5" fill="#00ff9d"/><text x="342" y="319" fill="#7a8ba8">low</text>
+  </g>
+</svg>

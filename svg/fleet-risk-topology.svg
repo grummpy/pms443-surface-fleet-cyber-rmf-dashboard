@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 400" width="1120" height="800">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#122038"/>
+      <stop offset="100%" stop-color="#070d16"/>
+    </radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="560" height="400" rx="12" fill="url(#bg)"/>
+  <text x="28" y="32" fill="#00e5ff" font-family="Orbitron,ui-sans-serif,system-ui" font-size="14" font-weight="700">FLEET RISK TOPOLOGY</text>
+  <text x="28" y="50" fill="#7a8ba8" font-family="ui-monospace,monospace" font-size="10">PMS 443 · Surface Ship Sustainment · click nodes in live UI</text>
+  <!-- grid -->
+  <g stroke="#1a2d45" stroke-width="0.5" opacity="0.5">
+
+    <line x1="40" y1="60" x2="40" y2="380"/>
+    <line x1="80" y1="60" x2="80" y2="380"/>
+    <line x1="120" y1="60" x2="120" y2="380"/>
+    <line x1="160" y1="60" x2="160" y2="380"/>
+    <line x1="200" y1="60" x2="200" y2="380"/>
+    <line x1="240" y1="60" x2="240" y2="380"/>
+    <line x1="280" y1="60" x2="280" y2="380"/>
+    <line x1="320" y1="60" x2="320" y2="380"/>
+    <line x1="360" y1="60" x2="360" y2="380"/>
+    <line x1="400" y1="60" x2="400" y2="380"/>
+    <line x1="440" y1="60" x2="440" y2="380"/>
+    <line x1="480" y1="60" x2="480" y2="380"/>
+    <line x1="520" y1="60" x2="520" y2="380"/>
+    <line x1="20" y1="60" x2="540" y2="60"/>
+    <line x1="20" y1="100" x2="540" y2="100"/>
+    <line x1="20" y1="140" x2="540" y2="140"/>
+    <line x1="20" y1="180" x2="540" y2="180"/>
+    <line x1="20" y1="220" x2="540" y2="220"/>
+    <line x1="20" y1="260" x2="540" y2="260"/>
+    <line x1="20" y1="300" x2="540" y2="300"/>
+    <line x1="20" y1="340" x2="540" y2="340"/>
+    <line x1="20" y1="380" x2="540" y2="380"/>
+  </g>
+  <line x1="280" y1="200" x2="280.0" y2="70.0" stroke="#1a2d45" stroke-width="2"/>
+  <line x1="280" y1="200" x2="418.6" y2="135.0" stroke="#1a2d45" stroke-width="2"/>
+  <line x1="280" y1="200" x2="418.6" y2="265.0" stroke="#1a2d45" stroke-width="2"/>
+  <line x1="280" y1="200" x2="280.0" y2="330.0" stroke="#1a2d45" stroke-width="2"/>
+  <line x1="280" y1="200" x2="141.4" y2="265.0" stroke="#1a2d45" stroke-width="2"/>
+  <line x1="280" y1="200" x2="141.4" y2="135.0" stroke="#1a2d45" stroke-width="2"/>
+  <circle cx="280" cy="200" r="42" fill="#111b2a" stroke="#00e5ff" stroke-width="2.5" filter="url(#glow)"/>
+  <text x="280" y="194" text-anchor="middle" fill="#00e5ff" font-size="12" font-family="Orbitron,ui-sans-serif" font-weight="700">PMS 443</text>
+  <text x="280" y="212" text-anchor="middle" fill="#7a8ba8" font-size="9" font-family="ui-monospace,monospace">SURFACE</text>
+
+  <g>
+    <circle cx="280.0" cy="70.0" r="32" fill="#111b2a" stroke="#ff3b5c" stroke-width="2.5" filter="url(#glow)"/>
+    <text x="280.0" y="64.0" text-anchor="middle" fill="#e8f0ff" font-size="12" font-weight="700" font-family="ui-sans-serif">DDG</text>
+    <text x="280.0" y="80.0" text-anchor="middle" fill="#7a8ba8" font-size="10" font-family="ui-monospace,monospace">5 hull</text>
+  </g>
+  <g>
+    <circle cx="418.6" cy="135.0" r="32" fill="#111b2a" stroke="#ffb800" stroke-width="2.5" filter="url(#glow)"/>
+    <text x="418.6" y="129.0" text-anchor="middle" fill="#e8f0ff" font-size="12" font-weight="700" font-family="ui-sans-serif">CG</text>
+    <text x="418.6" y="145.0" text-anchor="middle" fill="#7a8ba8" font-size="10" font-family="ui-monospace,monospace">2 hull</text>
+  </g>
+  <g>
+    <circle cx="418.6" cy="265.0" r="32" fill="#111b2a" stroke="#ffb800" stroke-width="2.5" filter="url(#glow)"/>
+    <text x="418.6" y="259.0" text-anchor="middle" fill="#e8f0ff" font-size="12" font-weight="700" font-family="ui-sans-serif">LPD</text>
+    <text x="418.6" y="275.0" text-anchor="middle" fill="#7a8ba8" font-size="10" font-family="ui-monospace,monospace">2 hull</text>
+  </g>
+  <g>
+    <circle cx="280.0" cy="330.0" r="32" fill="#111b2a" stroke="#ffb800" stroke-width="2.5" filter="url(#glow)"/>
+    <text x="280.0" y="324.0" text-anchor="middle" fill="#e8f0ff" font-size="12" font-weight="700" font-family="ui-sans-serif">LCS</text>
+    <text x="280.0" y="340.0" text-anchor="middle" fill="#7a8ba8" font-size="10" font-family="ui-monospace,monospace">2 hull</text>
+  </g>
+  <g>
+    <circle cx="141.4" cy="265.0" r="32" fill="#111b2a" stroke="#00e5ff" stroke-width="2.5" filter="url(#glow)"/>
+    <text x="141.4" y="259.0" text-anchor="middle" fill="#e8f0ff" font-size="12" font-weight="700" font-family="ui-sans-serif">LHD</text>
+    <text x="141.4" y="275.0" text-anchor="middle" fill="#7a8ba8" font-size="10" font-family="ui-monospace,monospace">1 hull</text>
+  </g>
+  <g>
+    <circle cx="141.4" cy="135.0" r="32" fill="#111b2a" stroke="#00ff9d" stroke-width="2.5" filter="url(#glow)"/>
+    <text x="141.4" y="129.0" text-anchor="middle" fill="#e8f0ff" font-size="12" font-weight="700" font-family="ui-sans-serif">FFG</text>
+    <text x="141.4" y="145.0" text-anchor="middle" fill="#7a8ba8" font-size="10" font-family="ui-monospace,monospace">1 hull</text>
+  </g>
+  <circle cx="40" cy="360" r="5" fill="#ff3b5c"/>
+  <text x="52" y="364" fill="#7a8ba8" font-size="10" font-family="ui-monospace,monospace">critical</text>
+  <circle cx="150" cy="360" r="5" fill="#ffb800"/>
+  <text x="162" y="364" fill="#7a8ba8" font-size="10" font-family="ui-monospace,monospace">high</text>
+  <circle cx="260" cy="360" r="5" fill="#00e5ff"/>
+  <text x="272" y="364" fill="#7a8ba8" font-size="10" font-family="ui-monospace,monospace">moderate</text>
+  <circle cx="370" cy="360" r="5" fill="#00ff9d"/>
+  <text x="382" y="364" fill="#7a8ba8" font-size="10" font-family="ui-monospace,monospace">low</text>
+</svg>
