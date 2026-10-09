@@ -1,6 +1,6 @@
 # Cyber RMF eMASS Dashboard — Surface Fleet HUD (PMS 443)
 
-Interactive frontend dashboard for **DoD RMF / eMASS** artifacts focused on **US Navy surface fleet** cyber posture under **PMS 443 Surface Ship Sustainment**.
+Interactive, offline frontend for a **fictional, unclassified RMF training scenario**. It is not connected to eMASS, Navy networks, mission systems, or government data sources.
 
 ## How to run
 
@@ -30,9 +30,11 @@ python3 -m http.server 8080
 | **Predictive analytics** | Simulated risk forecast (Oct–Nov) + hotspots |
 | **Assets** | Hardware / Software / package artifacts (CIC, Aegis, VLS, SATCOM, etc.) |
 | **Hull map** | Clickable SVG ship silhouette; compartments map to assets & POA&Ms |
-| **Upload data** | Simulate eMASS export ingest → refreshes demo progress |
-| **Upload artifacts** | Add package artifacts for **RAG / AI chat** corpus |
-| **AI chatbot** | Keyword RAG over live fake data + artifacts (IA-2, critical POAMs, etc.) |
+| **Synthetic data import** | Validates one offline CSV/JSON training snapshot, then shows record counts and a deterministic diff against the current snapshot |
+| **Demo replay** | Restores the built-in synthetic training snapshot explicitly; it is separate from import |
+| **Artifact registry** | Records synthetic artifact metadata and SHA-256 values; uploaded files are metadata-only and never parsed or executed |
+| **Training navigator** | Searches synthetic POA&Ms plus only explicitly listed synthetic passages, with source/passage IDs |
+| **Reproducible snapshot** | Exports filters, scenario date, counts, source IDs, artifact hashes, data, and a snapshot SHA-256 for offline replay |
 
 ## Smart SVGs
 
@@ -55,15 +57,26 @@ All use hover glow + click → filter / modal / explore panel.
 
 Military cyber HUD: navy glassmorphism, cyan neon accents, risk color coding (red/amber/green), Orbitron + JetBrains Mono + Inter.
 
-## Next steps (production)
+## Offline training controls
 
-- Wire real eMASS APIs / package exports
-- Replace simulated chat with vector RAG over uploaded artifacts
-- Auth (CAC / DoD SSO), classification banners
-- Persist filters & package selection server-side
+The dashboard is deliberately constrained to synthetic, offline training data:
+
+- `IMPORT SYNTHETIC` accepts only `.json` or `.csv` files marked `training=true`, `classification=UNCLASSIFIED`, and a `SYN-` source ID. It also requires source version, offline/fixture locator, reviewer, as-of date, and freshness confidence.
+- CSV imports require the metadata comment block and exact header documented in [`fixtures/synthetic-poams.csv`](fixtures/synthetic-poams.csv). JSON imports follow [`fixtures/synthetic-poams.json`](fixtures/synthetic-poams.json).
+- Freshness confidence is shown as provenance. The dashboard’s selected-hull risk score is shown separately as **scenario posture** and must not be read as a freshness claim.
+- Uploaded artifact files must use a `SYN-` or `SYN_` filename. Their bytes are hashed only; text, macros, embedded instructions, and links are never parsed, indexed, displayed, or executed. Only the built-in curated synthetic excerpt has a searchable passage.
+- `SNAPSHOT` saves the complete offline scenario, filters, counts, source IDs, metadata-only/explicit-passage artifact registry, and SHA-256. Re-import checks the schema and SHA-256, restores the saved filters and registry, and refuses a snapshot whose reconstructed inventory does not reproduce the signed hash.
+
+Run the parser regression tests with:
+
+```bash
+node --test test/offline-import.test.js
+```
+
+Do not use this project to ingest real government data, contact/scan mission systems, or represent current fleet posture.
 
 ---
-Demo package id: `SF-RMF-2026-Q3` · All data is fictional for UI prototyping. UNCLASSIFIED // FOR TRAINING & DEMO USE ONLY.
+Demo package id: `SYN-PMS443-TRAINING-Q3` · All data is fictional for UI prototyping. UNCLASSIFIED // SYNTHETIC TRAINING USE ONLY.
 
 ## Standalone SVG kit (exported)
 

@@ -184,9 +184,30 @@ const ARTIFACTS = [
 ];
 
 let packageArtifacts = [
-  { name: 'RMF_Package_Index.pdf', type: 'Package', uploaded: '2026-09-01', forRAG: true },
-  { name: 'Aegis_Security_Architecture.pdf', type: 'Architecture', uploaded: '2026-08-15', forRAG: true },
-  { name: 'OT_Network_Segmentation_Guide.docx', type: 'Guide', uploaded: '2026-08-20', forRAG: true },
-  { name: 'IA-2_Mitigation_Strategy_DDG51.pdf', type: 'POA&M Detail', uploaded: '2026-08-22', forRAG: true },
-  { name: 'PMS443_Surface_Sustainment_RMF_SOP.pdf', type: 'SOP', uploaded: '2026-07-10', forRAG: true },
+  {
+    name: 'SYN_RMF_Package_Index.pdf', type: 'Package metadata', uploaded: '2026-09-01',
+    sourceId: 'SYN-ART-PACKAGE-INDEX', mode: 'metadata-only', hashScope: 'synthetic-registry-descriptor/v1', sha256: '695639e356a6631e3d4ea8070293481cd20cb2c7f20eeced3830ddaeeba813e0', passages: [],
+  },
+  {
+    name: 'SYN_Aegis_Security_Architecture.pdf', type: 'Architecture metadata', uploaded: '2026-08-15',
+    sourceId: 'SYN-ART-ARCH-001', mode: 'metadata-only', hashScope: 'synthetic-registry-descriptor/v1', sha256: '680abf659aecbe9406cc958c3202682aacfa21f2f49a885c7faca3a07d09be3b', passages: [],
+  },
+  {
+    name: 'SYN_OT_Network_Segmentation_Guide.docx', type: 'Guide metadata', uploaded: '2026-08-20',
+    sourceId: 'SYN-ART-GUIDE-001', mode: 'metadata-only', hashScope: 'synthetic-registry-descriptor/v1', sha256: '0076af57564bb6b003cd04d3c68bf08b87abf92493ecb4f5fe040763f98093b1', passages: [],
+  },
+  {
+    name: 'SYN_IA2_Training_Excerpt.txt', type: 'Synthetic training excerpt', uploaded: '2026-08-22',
+    sourceId: 'SYN-ART-IA2-001', mode: 'extracted-synthetic-passages', hashScope: 'synthetic-registry-descriptor/v1', sha256: '22c11eb3be04f81670318b2a3d80e256327f348d9d2fa082e946db169a9ecbd2',
+    passages: [
+      {
+        id: 'SYN-ART-IA2-001#P1',
+        text: 'Synthetic training scenario: document the simulated IA-2 remediation sequence for DDG-51. This excerpt is curated training text, not a source document.',
+      },
+    ],
+  },
+  {
+    name: 'SYN_PMS443_Training_SOP.pdf', type: 'SOP metadata', uploaded: '2026-07-10',
+    sourceId: 'SYN-ART-SOP-001', mode: 'metadata-only', hashScope: 'synthetic-registry-descriptor/v1', sha256: 'ee3a31a22b68d066500f15d6025e7e6a5ad56990694f899cc843e46a679dc6dd', passages: [],
+  },
 ];

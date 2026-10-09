@@ -1,9 +1,11 @@
 # PMS 443 Surface Fleet Cyber RMF Dashboard
 ## Product Outline — Buttons, Analytics, Data Feeds & Predictive Roadmap
 
-**Package:** `SF-RMF-2026-Q3` · Demo / training UI (UNCLASSIFIED fake eMASS data)  
-**Audience:** ISSO / ISSM / PMS 443 / NAVSEA cyber risk owners  
+**Package:** `SYN-PMS443-TRAINING-Q3` · Offline / synthetic training UI (UNCLASSIFIED)
+**Audience:** Training participants only; not operational cyber risk owners
 **Stack:** Pure HTML/CSS/JS · Chart.js · Font Awesome · Smart SVGs  
+
+> **Current safety boundary:** This is an offline synthetic-training prototype. It does not ingest real eMASS/package data, contact or scan mission systems, or make operational posture claims. The sections below are legacy design notes; they are not authorization to add production integrations.
 
 ---
 
