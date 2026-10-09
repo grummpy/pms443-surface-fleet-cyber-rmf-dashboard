@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "training": true,
+    "classification": "UNCLASSIFIED",
+    "sourceId": "SYN-PMS443-SAMPLE",
+    "sourceVersion": "1.0.0",
+    "locator": "fixture://synthetic-poams.json",
+    "reviewer": "Training Content Reviewer",
+    "asOf": "2026-10-06",
+    "freshnessConfidence": "high"
+  },
+  "poams": [
+    {
+      "synthetic": true,
+      "id": "POAM-SYN-0001",
+      "title": "Synthetic training finding: control evidence review",
+      "hullId": "ddg51",
+      "control": "IA-2",
+      "status": "Ongoing",
+      "risk": "moderate",
+      "due": "2026-11-15",
+      "progress": 45,
+      "owner": "Training Team",
+      "compartment": "cic",
+      "mitigation": "Synthetic tabletop remediation sequence; no live system action."
+    }
+  ]
+}

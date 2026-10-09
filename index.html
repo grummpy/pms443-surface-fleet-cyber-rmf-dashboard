@@ -13,7 +13,7 @@
   <div class="hud-grid"></div>
 
   <!-- Classification banner -->
-  <div class="class-banner">UNCLASSIFIED // FOR TRAINING & DEMO USE ONLY — FAKE eMASS DATA — PMS 443 SURFACE SHIP SUSTAINMENT</div>
+  <div class="class-banner">UNCLASSIFIED // SYNTHETIC TRAINING DATA ONLY — OFFLINE DEMO — PMS 443 SURFACE SHIP SUSTAINMENT</div>
 
   <!-- TOP HUD BAR -->
   <header class="top-bar">
@@ -44,6 +44,10 @@
           <option value="all">ALL HULLS</option>
         </select>
       </div>
+      <div class="filter-group scenario-date">
+        <label for="scenarioAsOf">SCENARIO AS-OF</label>
+        <input id="scenarioAsOf" type="date" value="2026-09-07" />
+      </div>
       <button class="btn-clear-zone" id="btnClearZone" title="Clear compartment filter" style="display:none">
         <i class="fas fa-times"></i> CLEAR ZONE
       </button>
@@ -58,19 +62,25 @@
           <span class="user-org">PMS 443 · NAVSEA</span>
         </div>
       </div>
-      <button class="btn-upload" id="btnUploadData" title="Upload eMASS XML/Excel (POA&Ms, Controls)">
-        <i class="fas fa-cloud-upload-alt"></i> DATA
+      <button class="btn-upload" id="btnUploadData" title="Import a validated, offline synthetic CSV or JSON snapshot">
+        <i class="fas fa-file-import"></i> IMPORT SYNTHETIC
       </button>
-      <button class="btn-upload secondary" id="btnUploadArtifact" title="Upload package artifacts for RAG">
-        <i class="fas fa-file-upload"></i> ARTIFACTS
+      <button class="btn-upload" id="btnReplayDemo" title="Restore the built-in synthetic demonstration snapshot">
+        <i class="fas fa-rotate-left"></i> REPLAY DEMO
       </button>
-      <input type="file" id="fileData" multiple accept=".xlsx,.xls,.csv,.json,.xml,.pdf" hidden />
+      <button class="btn-upload secondary" id="btnUploadArtifact" title="Register a synthetic artifact as metadata only; no document text is read">
+        <i class="fas fa-fingerprint"></i> ARTIFACT METADATA
+      </button>
+      <button class="btn-upload secondary" id="btnExportSnapshot" title="Save the visible offline scenario, filters, counts, source IDs, and hash">
+        <i class="fas fa-download"></i> SNAPSHOT
+      </button>
+      <input type="file" id="fileData" accept=".csv,.json,application/json,text/csv" hidden />
       <input type="file" id="fileArtifact" multiple accept=".pdf,.docx,.txt,.json,.xml,.csv,.xlsx" hidden />
       <button class="btn-ai" id="btnToggleChat">
         <i class="fas fa-robot"></i> eMASS AI
       </button>
       <div class="status-indicator">
-        <span class="pulse"></span> LIVE
+        <span class="pulse"></span> OFFLINE SYNTHETIC
       </div>
     </div>
   </header>
@@ -98,13 +108,17 @@
       </div>
       <div class="alerts-list" id="alertsList"></div>
       <div class="panel-header mt">
-        <i class="fas fa-file-alt"></i> ARTIFACT DROP
+        <i class="fas fa-file-import"></i> SYNTHETIC SNAPSHOT IMPORT
       </div>
       <div class="drop-zone" id="dropZone">
-        <i class="fas fa-cloud-upload-alt"></i>
-        <p>Drop eMASS XML / Excel / SSP here</p>
-        <span>or click to browse</span>
+        <i class="fas fa-file-import"></i>
+        <p>Drop synthetic CSV / JSON only</p>
+        <span>Requires SYN- source ID and offline metadata</span>
       </div>
+      <div class="panel-header mt">
+        <i class="fas fa-shield-halved"></i> SNAPSHOT PROVENANCE
+      </div>
+      <div class="snapshot-provenance" id="snapshotProvenance" aria-live="polite"></div>
     </aside>
 
     <!-- CENTER CONTENT -->
@@ -146,7 +160,7 @@
     <div class="chat-messages" id="chatMessages">
       <div class="msg bot">
         <strong>eMASS AI Navigator online.</strong><br>
-        I can query POA&Ms, NIST SP 800-53 controls, hull assets, predictive risk, and uploaded package artifacts for PMS 443 surface fleet packages.<br><br>
+        I can query synthetic POA&Ms, NIST SP 800-53 controls, hull assets, predictive risk, and explicitly extracted synthetic passages. Uploaded artifacts are metadata-only; document instructions are inert and are never read or executed.<br><br>
         Try: <em>"What is our mitigation strategy for the failed IA-2 controls on DDG-51?"</em>
       </div>
     </div>
@@ -157,7 +171,7 @@
       <button type="button" data-q="List package artifacts">Artifacts</button>
     </div>
     <div class="chat-input-area">
-      <input type="text" id="chatInput" placeholder="Query eMASS / RMF package documentation…" />
+      <input type="text" id="chatInput" placeholder="Query the offline synthetic training snapshot…" />
       <button id="chatSend"><i class="fas fa-paper-plane"></i></button>
     </div>
   </div>
@@ -175,6 +189,7 @@
   </div>
 
   <script src="data.js"></script>
+  <script src="offline-import.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
