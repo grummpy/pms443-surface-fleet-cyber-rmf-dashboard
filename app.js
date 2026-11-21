@@ -10,7 +10,28 @@ let state = {
   assetSubTab: 'hardware',
   charts: {},
   selectedCompartment: null,
+  scenarioAsOf: '2026-09-07',
+  datasetMetadata: {
+    training: true,
+    classification: 'UNCLASSIFIED',
+    sourceId: 'SYN-PMS443-DEMO-2026-Q3',
+    sourceVersion: 'demo-1.0.0',
+    locator: 'fixture://data.js',
+    reviewer: 'Training Content Reviewer',
+    asOf: '2026-09-07',
+    freshnessConfidence: 'high',
+  },
+  snapshotHash: 'calculating…',
+  snapshotRevision: 0,
 };
+
+const DEMO_POAMS = POAMS.map((record) => ({ ...record }));
+const DEMO_DATASET_METADATA = { ...state.datasetMetadata };
+const DEMO_PACKAGE_ARTIFACTS = packageArtifacts.map((artifact) => ({
+  ...artifact,
+  passages: (artifact.passages || []).map((passage) => ({ ...passage })),
+}));
+let lastDataDiff = { added: [], removed: [], changed: [], unchanged: DEMO_POAMS.length };
 
 // ---------- Helpers ----------
 function toast(msg, ms = 3200) {
@@ -26,6 +47,129 @@ function escapeHtml(s) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+function scenarioDate() {
+  return new Date(`${state.scenarioAsOf}T00:00:00Z`);
+}
+
+function formatScenarioDate(value = state.scenarioAsOf) {
+  const date = new Date(`${value}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', day: '2-digit', month: 'short', year: '2-digit' })
+    .format(date).toUpperCase();
+}
+
+function scenarioPosture() {
+  const map = { critical: 4, high: 3, moderate: 2, low: 1 };
+  const hulls = filteredHulls();
+  if (!hulls.length) return { label: 'No filtered hulls', score: 0 };
+  const score = Math.round((hulls.reduce((sum, hull) => sum + (map[hull.risk] || 2), 0) / hulls.length) * 25);
+  const label = score > 70 ? 'Critical' : score > 50 ? 'High' : score > 25 ? 'Moderate' : 'Low';
+  return { label, score };
+}
+
+function snapshotFilters(filters = {}) {
+  const has = (key) => Object.prototype.hasOwnProperty.call(filters, key);
+  return {
+    shipClass: has('shipClass') ? filters.shipClass : state.shipClass,
+    hull: has('hull') ? filters.hull : state.hull,
+    compartment: has('compartment') ? filters.compartment : state.selectedCompartment || null,
+  };
+}
+
+function snapshotCounts({ poams = POAMS, artifacts = packageArtifacts, filters = snapshotFilters() } = {}) {
+  const hulls = HULLS.filter((hull) => {
+    if (filters.shipClass !== 'all' && hull.classId !== filters.shipClass) return false;
+    if (filters.hull !== 'all' && hull.id !== filters.hull) return false;
+    return true;
+  });
+  const hullIds = new Set(hulls.map((hull) => hull.id));
+  const visiblePoams = poams.filter((poam) => hullIds.has(poam.hullId)
+    && (!filters.compartment || poam.compartment === filters.compartment));
+  return {
+    hulls: hulls.length,
+    poams: visiblePoams.length,
+    openPoams: visiblePoams.filter((poam) => poam.status !== 'Closed').length,
+    artifacts: artifacts.length,
+  };
+}
+
+function visibleCounts() {
+  return snapshotCounts();
+}
+
+function sourceIds(metadata = state.datasetMetadata, artifacts = packageArtifacts) {
+  return [metadata.sourceId, ...artifacts.map((artifact) => artifact.sourceId)]
+    .filter(Boolean)
+    .sort();
+}
+
+function snapshotArtifact(artifact) {
+  return {
+    sourceId: artifact.sourceId,
+    name: artifact.name,
+    type: artifact.type,
+    uploaded: artifact.uploaded,
+    mode: artifact.mode,
+    hashScope: artifact.hashScope,
+    sha256: artifact.sha256,
+    passages: (artifact.passages || []).map((passage) => ({ id: passage.id, text: passage.text })),
+  };
+}
+
+function buildOfflineSnapshot({ metadata = state.datasetMetadata, poams = POAMS, artifacts = packageArtifacts, filters, scenarioAsOf = state.scenarioAsOf } = {}) {
+  const activeFilters = snapshotFilters(filters);
+  return {
+    schema: 'pms443-offline-synthetic-snapshot/v1',
+    training: true,
+    classification: 'UNCLASSIFIED',
+    metadata: { ...metadata },
+    scenario: {
+      asOf: scenarioAsOf,
+      filters: activeFilters,
+    },
+    counts: snapshotCounts({ poams, artifacts, filters: activeFilters }),
+    sourceIds: sourceIds(metadata, artifacts),
+    poams: poams.map((poam) => ({ synthetic: true, ...poam })),
+    artifacts: artifacts.map(snapshotArtifact),
+  };
+}
+
+async function updateSnapshotHash() {
+  const revision = ++state.snapshotRevision;
+  state.snapshotHash = 'calculating…';
+  renderSnapshotProvenance();
+  try {
+    const hash = await DashboardOfflineImport.sha256Hex(buildOfflineSnapshot());
+    if (revision !== state.snapshotRevision) return;
+    state.snapshotHash = hash;
+  } catch {
+    if (revision !== state.snapshotRevision) return;
+    state.snapshotHash = 'unavailable';
+  }
+  renderSnapshotProvenance();
+}
+
+function renderSnapshotProvenance() {
+  const el = document.getElementById('snapshotProvenance');
+  if (!el) return;
+  const counts = visibleCounts();
+  const posture = scenarioPosture();
+  const meta = state.datasetMetadata;
+  const diff = lastDataDiff;
+  el.innerHTML = `
+    <div class="training-label">UNCLASSIFIED · SYNTHETIC · OFFLINE</div>
+    <div><strong>Source:</strong> ${escapeHtml(meta.sourceId)} · ${escapeHtml(meta.sourceVersion)}</div>
+    <div><strong>Locator:</strong> ${escapeHtml(meta.locator)}</div>
+    <div><strong>Reviewer:</strong> ${escapeHtml(meta.reviewer)}</div>
+    <div><strong>Data as-of:</strong> ${escapeHtml(meta.asOf)} · <strong>Scenario as-of:</strong> ${escapeHtml(state.scenarioAsOf)}</div>
+    <div><strong>Freshness confidence:</strong> ${escapeHtml(meta.freshnessConfidence)} <span aria-label="Freshness confidence is not posture">(separate from posture)</span></div>
+    <div class="posture-label"><strong>Scenario posture:</strong> ${posture.label} (${posture.score}/100) from selected synthetic hulls.</div>
+    <div><strong>Visible counts:</strong> ${counts.hulls} hulls · ${counts.poams} POA&Ms (${counts.openPoams} open) · ${counts.artifacts} artifacts</div>
+    <div><strong>Last dataset diff:</strong> +${diff.added.length} / ~${diff.changed.length} / −${diff.removed.length} / =${diff.unchanged}</div>
+    <div><strong>Source IDs:</strong> ${escapeHtml(sourceIds().join(', '))}</div>
+    <div class="snapshot-hash"><strong>Snapshot SHA-256:</strong> ${escapeHtml(state.snapshotHash)}</div>`;
 }
 
 function riskColor(r) {
@@ -109,7 +253,7 @@ function updateClock() {
   if (!el) return;
   const now = new Date();
   const zulu = now.toISOString().replace('T', ' ').slice(0, 19) + 'Z';
-  el.innerHTML = zulu + '<br><span style="color:var(--text-dim);font-size:0.6rem">PMS 443 DEMO</span>';
+  el.innerHTML = zulu + `<br><span style="color:var(--text-dim);font-size:0.6rem">LOCAL CLOCK · SCENARIO ${escapeHtml(state.scenarioAsOf)}</span>`;
 }
 
 // ---------- Filters UI ----------
@@ -164,7 +308,7 @@ function renderKpis() {
   const open = poams.filter((p) => p.status !== 'Closed');
   const critical = open.filter((p) => p.risk === 'critical').length;
   const high = open.filter((p) => p.risk === 'high').length;
-  const overdue = open.filter((p) => new Date(p.due) < new Date('2026-09-07')).length;
+  const overdue = open.filter((p) => new Date(`${p.due}T00:00:00Z`) < scenarioDate()).length;
   const controls = filteredControls();
   const approved = controls.filter((c) => c.status === 'Approved').length;
   const controlScore = controls.length ? Math.round((approved / controls.length) * 100) : 0;
@@ -179,7 +323,7 @@ function renderKpis() {
 
   const kpis = [
     { key: 'open', label: 'Open POA&Ms', value: open.length, sub: `${critical} critical`, risk: critical ? 'critical' : high ? 'high' : 'moderate' },
-    { key: 'overdue', label: 'Overdue / Due Soon', value: overdue, sub: 'before 07 SEP 26', risk: overdue ? 'high' : 'low' },
+    { key: 'overdue', label: 'Overdue / Due Soon', value: overdue, sub: `before ${formatScenarioDate()}`, risk: overdue ? 'high' : 'low' },
     { key: 'highrisk', label: 'High+Critical', value: critical + high, sub: 'open findings', risk: critical ? 'critical' : 'high' },
     { key: 'control', label: 'Control Score', value: controlScore + '%', sub: `${approved}/${controls.length} approved`, risk: controlScore > 70 ? 'low' : controlScore > 40 ? 'moderate' : 'high' },
     { key: 'assets', label: 'At-Risk Assets', value: critAssets, sub: 'HW degraded/EOL', risk: critAssets > 2 ? 'critical' : 'high' },
@@ -288,14 +432,14 @@ function onPOAMClick(id) {
   const body = `
     <div class="detail-block">
       <h4>${escapeHtml(p.title)}</h4>
-      <div class="detail-row"><span class="k">ID</span><span class="v">${p.id}</span></div>
-      <div class="detail-row"><span class="k">Hull</span><span class="v">${h ? h.hull : p.hullId}</span></div>
-      <div class="detail-row"><span class="k">Control</span><span class="v">${p.control}</span></div>
-      <div class="detail-row"><span class="k">Status</span><span class="v">${p.status}</span></div>
+      <div class="detail-row"><span class="k">ID</span><span class="v">${escapeHtml(p.id)}</span></div>
+      <div class="detail-row"><span class="k">Hull</span><span class="v">${escapeHtml(h ? h.hull : p.hullId)}</span></div>
+      <div class="detail-row"><span class="k">Control</span><span class="v">${escapeHtml(p.control)}</span></div>
+      <div class="detail-row"><span class="k">Status</span><span class="v">${escapeHtml(p.status)}</span></div>
       <div class="detail-row"><span class="k">Risk</span><span class="v"><span class="risk-badge ${p.risk}">${p.risk}</span></span></div>
-      <div class="detail-row"><span class="k">Due</span><span class="v">${p.due}</span></div>
+      <div class="detail-row"><span class="k">Due</span><span class="v">${escapeHtml(p.due)}</span></div>
       <div class="detail-row"><span class="k">Owner</span><span class="v">${escapeHtml(p.owner)}</span></div>
-      <div class="detail-row"><span class="k">Compartment</span><span class="v">${p.compartment}</span></div>
+      <div class="detail-row"><span class="k">Compartment</span><span class="v">${escapeHtml(p.compartment)}</span></div>
       <div class="detail-row"><span class="k">Progress</span><span class="v">${p.progress}%</span></div>
       <div style="margin-top:0.5rem"><div class="progress-bar"><div class="fill ${p.progress >= 100 ? 'done' : p.risk}" style="width:${p.progress}%"></div></div></div>
       <p style="margin-top:0.75rem;color:var(--text-dim)"><strong style="color:var(--cyan)">Mitigation strategy:</strong> ${escapeHtml(p.mitigation)}</p>
@@ -714,13 +858,13 @@ function renderPoamControls() {
   const poamRows = poams.map((p) => {
     const h = hullById(p.hullId);
     return `<tr onclick="onPOAMClick('${p.id}')">
-      <td style="font-family:var(--mono);font-size:0.68rem">${p.id}</td>
+      <td style="font-family:var(--mono);font-size:0.68rem">${escapeHtml(p.id)}</td>
       <td>${escapeHtml(p.title)}</td>
-      <td>${h ? h.hull : p.hullId}</td>
-      <td>${p.control}</td>
-      <td>${p.status}</td>
+      <td>${escapeHtml(h ? h.hull : p.hullId)}</td>
+      <td>${escapeHtml(p.control)}</td>
+      <td>${escapeHtml(p.status)}</td>
       <td><span class="risk-badge ${p.risk}">${p.risk}</span></td>
-      <td>${p.due}</td>
+      <td>${escapeHtml(p.due)}</td>
       <td><div class="progress-bar"><div class="fill ${p.progress >= 100 ? 'done' : p.risk}" style="width:${p.progress}%"></div></div></td>
       <td class="poam-mitigation-cell" title="${escapeHtml(p.mitigation)}">${escapeHtml(p.mitigation)}</td>
     </tr>`;
@@ -956,24 +1100,27 @@ function renderAssets() {
     ${sub === 'artifacts' ? `
       <div class="split-inventory">
         <div>
-          <h3 class="section-title">eMASS Exports</h3>
+          <h3 class="section-title">Synthetic Demo Inventory</h3>
+          <p class="artifact-note">These are built-in labels for the training display. They are not uploaded files, are not searchable, and are not a claim of eMASS connectivity.</p>
           <div class="artifact-list">
             ${ARTIFACTS.map((a) => `
               <div class="artifact-item">
                 <i class="fas fa-file"></i>
                 <span class="name">${escapeHtml(a.name)}</span>
-                <span class="meta">${a.type} · ${a.uploaded} · ${a.size}</span>
+                <span class="meta">Synthetic display label · ${a.type} · ${a.uploaded} · ${a.size}</span>
               </div>`).join('')}
           </div>
         </div>
         <div>
-          <h3 class="section-title">RAG Corpus</h3>
+          <h3 class="section-title">Artifact Registry</h3>
+          <p class="artifact-note">Metadata-only records never expose document text. Only rows marked <em>extracted-synthetic-passages</em> are searchable, and only their listed passages are used. Embedded document instructions, macros, and links are inert and never executed.</p>
           <div class="artifact-list">
             ${packageArtifacts.map((a) => `
               <div class="artifact-item">
                 <i class="fas fa-book"></i>
                 <span class="name">${escapeHtml(a.name)}</span>
-                <span class="meta">${a.type} · ${a.uploaded}</span>
+                <span class="meta">${escapeHtml(a.type)} · ${escapeHtml(a.uploaded)} · ${escapeHtml(a.sourceId || 'SYN-UNASSIGNED')}</span>
+                <span class="artifact-mode">${escapeHtml(a.mode || 'metadata-only')} · ${(a.passages || []).length} searchable passage(s) · ${escapeHtml(a.hashScope || 'file')} SHA-256 ${escapeHtml(a.sha256 || 'not-calculated')}</span>
               </div>`).join('')}
           </div>
         </div>
@@ -1015,6 +1162,17 @@ function renderMitigations() {
 }
 
 // ---------- AI Chat (keyword RAG) ----------
+function searchableArtifactPassages(query) {
+  const terms = String(query || '').toLowerCase().match(/[a-z0-9-]{3,}/g) || [];
+  return packageArtifacts.flatMap((artifact) => (artifact.mode === 'extracted-synthetic-passages' ? (artifact.passages || [])
+    .map((passage) => ({ artifact, passage })) : []))
+    .filter(({ artifact, passage }) => {
+      if (!terms.length) return true;
+      const haystack = `${artifact.name} ${passage.text}`.toLowerCase();
+      return terms.some((term) => haystack.includes(term));
+    });
+}
+
 function ragAnswer(q) {
   const lower = q.toLowerCase();
   const lines = [];
@@ -1031,7 +1189,10 @@ function ragAnswer(q) {
     if (m240.length) {
       lines.push('Steps: ' + m240.map((m) => `#${m.step} ${escapeHtml(m.title)} (${m.status})`).join('; '));
     }
-    lines.push('Related artifact: <code>IA-2_Mitigation_Strategy_DDG51.pdf</code> (RAG corpus).');
+    const excerpts = searchableArtifactPassages('IA-2 DDG-51');
+    if (excerpts.length) {
+      lines.push(`Synthetic passage: <code>${escapeHtml(excerpts[0].passage.id)}</code> — ${escapeHtml(excerpts[0].passage.text)}`);
+    }
   } else if (/critical|open poam|poam/.test(lower)) {
     const crit = filteredPoams().filter((p) => p.risk === 'critical' && p.status !== 'Closed');
     lines.push(`<strong>Critical open POA&Ms (${crit.length})</strong>`);
@@ -1044,15 +1205,18 @@ function ragAnswer(q) {
     lines.push(`Current index ~${TREND_DATA.riskScore[TREND_DATA.riskScore.length - 1]}; projected Oct/Nov: ${TREND_DATA.predictedRisk.slice(-2).join(' → ')}.`);
     lines.push('Drivers: OT vulnerability scan gap (DDG-78), IA-2 HMI auth (DDG-51), patch lag rebounding to ' + TREND_DATA.patchLagDays.slice(-1)[0] + ' days.');
   } else if (/artifact|package|ssp|upload|rag/.test(lower)) {
-    lines.push('<strong>Package artifacts (RAG corpus)</strong>');
-    packageArtifacts.forEach((a) => lines.push(`• ${escapeHtml(a.name)} (${a.type}, ${a.uploaded})`));
-    lines.push('<strong>eMASS exports</strong>');
-    ARTIFACTS.forEach((a) => lines.push(`• ${escapeHtml(a.name)} — ${a.type}`));
+    lines.push('<strong>Offline artifact registry</strong>');
+    lines.push('Metadata-only artifacts are listed but never read. Embedded document instructions are inert and excluded from chat.');
+    packageArtifacts.forEach((a) => {
+      lines.push(`• ${escapeHtml(a.name)} [${escapeHtml(a.sourceId || 'SYN-UNASSIGNED')}] — ${escapeHtml(a.mode || 'metadata-only')}, ${(a.passages || []).length} searchable passage(s), SHA-256 ${escapeHtml(a.sha256 || 'not-calculated')}`);
+    });
+    const excerpts = searchableArtifactPassages(lower);
+    excerpts.forEach(({ passage }) => lines.push(`Synthetic passage <code>${escapeHtml(passage.id)}</code>: ${escapeHtml(passage.text)}`));
   } else if (/aegis|ddg-78|cve|display/.test(lower)) {
     const p = POAMS.find((x) => x.id === 'POAM-2024-0142');
     lines.push('<strong>Aegis / DDG-78 exposure</strong>');
     if (p) lines.push(`${p.id}: ${escapeHtml(p.mitigation)}`);
-    lines.push('Artifact: Aegis_Security_Architecture.pdf · SSP_DDG78_Aegis.pdf');
+    lines.push('No artifact text was used: the related demo inventory is metadata-only.');
   } else if (/control|800-53|nist/.test(lower)) {
     const bad = filteredControls().filter((c) => c.status !== 'Approved');
     lines.push(`<strong>Non-fully-approved controls (${bad.length})</strong>`);
@@ -1080,30 +1244,152 @@ function sendChat(q) {
   }, 400);
 }
 
-// ---------- Upload simulation ----------
-function handleDataUpload(files) {
-  if (!files || !files.length) return;
-  const names = [...files].map((f) => f.name).join(', ');
-  toast(`Ingested demo data: ${names} (simulated refresh)`);
-  // Nudge a couple POAM progress numbers for demo feel
-  POAMS.forEach((p, i) => {
-    if (p.status !== 'Closed' && i % 3 === 0) p.progress = Math.min(100, p.progress + 5);
-  });
-  refreshAll();
+// ---------- Offline synthetic imports, metadata registry, and replay ----------
+function normaliseSnapshotFilters(filters) {
+  const shipClass = filters?.shipClass || 'all';
+  const hull = filters?.hull || 'all';
+  const compartment = filters?.compartment || null;
+  if (shipClass !== 'all' && !SHIP_CLASSES.some((item) => item.id === shipClass)) {
+    throw new Error('Snapshot references an unknown training ship class.');
+  }
+  const selectedHull = hull === 'all' ? null : HULLS.find((item) => item.id === hull);
+  if (hull !== 'all' && !selectedHull) throw new Error('Snapshot references an unknown training hull.');
+  if (selectedHull && shipClass !== 'all' && selectedHull.classId !== shipClass) {
+    throw new Error('Snapshot ship-class and hull filters conflict.');
+  }
+  if (compartment && !COMPARTMENTS.some((item) => item.id === compartment)) {
+    throw new Error('Snapshot references an unknown training compartment.');
+  }
+  return { shipClass, hull, compartment };
 }
 
-function handleArtifactUpload(files) {
+function cloneArtifacts(artifacts) {
+  return artifacts.map((artifact) => ({
+    ...artifact,
+    passages: (artifact.passages || []).map((passage) => ({ ...passage })),
+  }));
+}
+
+async function handleDataUpload(files) {
   if (!files || !files.length) return;
-  [...files].forEach((f) => {
-    packageArtifacts.unshift({
-      name: f.name,
-      type: 'Upload',
-      uploaded: new Date().toISOString().slice(0, 10),
-      forRAG: true,
+  if (files.length !== 1) {
+    toast('Import rejected: choose one synthetic CSV or JSON snapshot at a time.');
+    return;
+  }
+  const file = files[0];
+  try {
+    const parsed = await DashboardOfflineImport.parseImportText(file.name, await file.text(), {
+      allowedHullIds: HULLS.map((hull) => hull.id),
     });
-  });
-  toast(`Added ${files.length} artifact(s) to RAG corpus`);
-  if (state.activeTab === 'assets') renderTab();
+    const filters = parsed.scenario ? normaliseSnapshotFilters(parsed.scenario.filters) : null;
+    const scenarioAsOf = parsed.scenario?.asOf || parsed.metadata.asOf;
+    if (parsed.snapshot) {
+      const rebuilt = buildOfflineSnapshot({
+        metadata: parsed.metadata,
+        poams: parsed.poams,
+        artifacts: parsed.artifacts,
+        filters,
+        scenarioAsOf,
+      });
+      const rebuiltHash = await DashboardOfflineImport.sha256Hex(rebuilt);
+      if (rebuiltHash !== parsed.snapshotSha256) {
+        throw new Error('Snapshot content does not reproduce its signed offline inventory.');
+      }
+    }
+    const diff = DashboardOfflineImport.diffPoams(POAMS, parsed.poams);
+    POAMS.splice(0, POAMS.length, ...parsed.poams);
+    state.datasetMetadata = parsed.metadata;
+    if (parsed.snapshot) packageArtifacts.splice(0, packageArtifacts.length, ...cloneArtifacts(parsed.artifacts));
+    state.shipClass = filters?.shipClass || 'all';
+    state.hull = filters?.hull || 'all';
+    state.selectedCompartment = filters?.compartment || null;
+    state.scenarioAsOf = scenarioAsOf;
+    document.getElementById('scenarioAsOf').value = state.scenarioAsOf;
+    populateFilters();
+    lastDataDiff = diff;
+    refreshAll();
+    toast(`Imported validated synthetic ${parsed.format.toUpperCase()}: ${parsed.poams.length} POA&Ms (+${diff.added.length} / ~${diff.changed.length} / −${diff.removed.length}).`);
+  } catch (error) {
+    toast(`Import rejected: ${error.message || 'invalid synthetic snapshot.'}`, 5200);
+  }
+}
+
+function replayDemo() {
+  const diff = DashboardOfflineImport.diffPoams(POAMS, DEMO_POAMS);
+  POAMS.splice(0, POAMS.length, ...DEMO_POAMS.map((record) => ({ ...record })));
+  packageArtifacts.splice(0, packageArtifacts.length, ...cloneArtifacts(DEMO_PACKAGE_ARTIFACTS));
+  state.datasetMetadata = { ...DEMO_DATASET_METADATA };
+  state.shipClass = 'all';
+  state.hull = 'all';
+  state.selectedCompartment = null;
+  state.scenarioAsOf = DEMO_DATASET_METADATA.asOf;
+  document.getElementById('scenarioAsOf').value = state.scenarioAsOf;
+  populateFilters();
+  lastDataDiff = diff;
+  refreshAll();
+  toast(`Replay restored the built-in synthetic training snapshot (+${diff.added.length} / ~${diff.changed.length} / −${diff.removed.length}).`);
+}
+
+function isSyntheticArtifactName(name) {
+  return /^SYN[-_]/i.test(String(name || ''));
+}
+
+async function handleArtifactUpload(files) {
+  if (!files || !files.length) return;
+  const rejected = [...files].filter((file) => !isSyntheticArtifactName(file.name) || file.size > 10 * 1024 * 1024);
+  if (rejected.length) {
+    toast('Artifact registration rejected: use SYN- or SYN_ filenames and files no larger than 10 MB. No document content was registered.', 5200);
+    return;
+  }
+  try {
+    let added = 0;
+    for (const file of files) {
+      // Hash bytes only for provenance. The file is not parsed, rendered, indexed, or executed.
+      const sha256 = await DashboardOfflineImport.sha256Hex(await file.arrayBuffer());
+      if (packageArtifacts.some((artifact) => artifact.sha256 === sha256)) continue;
+      packageArtifacts.unshift({
+        name: file.name,
+        type: 'Synthetic artifact metadata',
+        uploaded: state.scenarioAsOf,
+        sourceId: `SYN-ART-UPLOAD-${sha256.slice(0, 12).toUpperCase()}`,
+        mode: 'metadata-only',
+        hashScope: 'file-bytes',
+        sha256,
+        passages: [],
+      });
+      added += 1;
+    }
+    if (state.activeTab === 'assets') renderTab();
+    renderSnapshotProvenance();
+    void updateSnapshotHash();
+    toast(added ? `Registered ${added} synthetic artifact metadata record(s). Document instructions remain inert.` : 'Artifact already registered by SHA-256; no duplicate added.');
+  } catch (error) {
+    toast(`Artifact registration failed: ${error.message || 'hash unavailable.'}`, 5200);
+  }
+}
+
+async function exportOfflineSnapshot() {
+  try {
+    const snapshot = buildOfflineSnapshot();
+    const sha256 = await DashboardOfflineImport.sha256Hex(snapshot);
+    state.snapshotHash = sha256;
+    renderSnapshotProvenance();
+    const payload = { ...snapshot, snapshotSha256: sha256 };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `SYN-PMS443-snapshot-${state.scenarioAsOf}.json`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+    toast(`Saved reproducible offline snapshot: ${countsForToast(snapshot.counts)} · SHA-256 ${sha256.slice(0, 12)}…`);
+  } catch (error) {
+    toast(`Snapshot export failed: ${error.message || 'hash unavailable.'}`, 5200);
+  }
+}
+
+function countsForToast(counts) {
+  return `${counts.hulls} hulls, ${counts.poams} POA&Ms, ${counts.artifacts} artifacts`;
 }
 
 // ---------- Refresh / Init ----------
@@ -1113,6 +1399,8 @@ function refreshAll() {
   renderStatusTracker();
   renderAlerts();
   renderTab();
+  renderSnapshotProvenance();
+  void updateSnapshotHash();
 }
 
 function init() {
@@ -1126,6 +1414,15 @@ function init() {
   });
   document.getElementById('hullFilter').addEventListener('change', (e) => {
     state.hull = e.target.value;
+    refreshAll();
+  });
+  document.getElementById('scenarioAsOf').addEventListener('change', (e) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) {
+      e.target.value = state.scenarioAsOf;
+      toast('Scenario as-of must be an ISO date.');
+      return;
+    }
+    state.scenarioAsOf = e.target.value;
     refreshAll();
   });
 
@@ -1150,9 +1447,17 @@ function init() {
   });
 
   document.getElementById('btnUploadData').addEventListener('click', () => document.getElementById('fileData').click());
+  document.getElementById('btnReplayDemo').addEventListener('click', replayDemo);
   document.getElementById('btnUploadArtifact').addEventListener('click', () => document.getElementById('fileArtifact').click());
-  document.getElementById('fileData').addEventListener('change', (e) => handleDataUpload(e.target.files));
-  document.getElementById('fileArtifact').addEventListener('change', (e) => handleArtifactUpload(e.target.files));
+  document.getElementById('btnExportSnapshot').addEventListener('click', () => void exportOfflineSnapshot());
+  document.getElementById('fileData').addEventListener('change', (e) => {
+    void handleDataUpload(e.target.files);
+    e.target.value = '';
+  });
+  document.getElementById('fileArtifact').addEventListener('change', (e) => {
+    void handleArtifactUpload(e.target.files);
+    e.target.value = '';
+  });
 
   const drop = document.getElementById('dropZone');
   drop.addEventListener('click', () => document.getElementById('fileData').click());
@@ -1161,7 +1466,7 @@ function init() {
   drop.addEventListener('drop', (e) => {
     e.preventDefault();
     drop.classList.remove('dragover');
-    handleDataUpload(e.dataTransfer.files);
+    void handleDataUpload(e.dataTransfer.files);
   });
 
   document.getElementById('closeRight').addEventListener('click', () => {

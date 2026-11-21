@@ -119,6 +119,11 @@ body {
   flex-wrap: wrap;
 }
 
+.scenario-date input {
+  color-scheme: dark;
+  min-width: 138px;
+}
+
 .filter-group {
   display: flex;
   flex-direction: column;
@@ -554,6 +559,30 @@ body {
   background: rgba(0, 229, 255, 0.08);
   box-shadow: var(--glow);
 }
+
+.snapshot-provenance {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(0, 229, 255, 0.03);
+  padding: 0.65rem;
+  color: var(--text-dim);
+  font-size: 0.64rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.snapshot-provenance strong { color: var(--text); }
+.snapshot-provenance .training-label { color: var(--cyan); font-weight: 700; letter-spacing: 0.06em; }
+.snapshot-provenance .posture-label { color: var(--amber); }
+.snapshot-provenance .snapshot-hash { font-family: var(--mono); color: var(--green); font-size: 0.58rem; }
+
+.artifact-note {
+  color: var(--text-dim);
+  font-size: 0.64rem;
+  line-height: 1.45;
+  margin: 0.35rem 0 0.65rem;
+}
+.artifact-mode { color: var(--cyan); font-family: var(--mono); font-size: 0.58rem; }
 
 .center-panel {
   display: flex;

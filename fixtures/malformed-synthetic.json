@@ -1,0 +1,13 @@
+{
+  "metadata": {
+    "training": false,
+    "classification": "UNCLASSIFIED",
+    "sourceId": "SYN-REJECTED-FIXTURE",
+    "sourceVersion": "1.0.0",
+    "locator": "fixture://malformed-synthetic.json",
+    "reviewer": "Training Content Reviewer",
+    "asOf": "2026-10-06",
+    "freshnessConfidence": "high"
+  },
+  "poams": []
+}

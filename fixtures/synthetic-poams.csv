@@ -1,0 +1,10 @@
+# training=true
+# classification=UNCLASSIFIED
+# sourceId=SYN-PMS443-SAMPLE-CSV
+# sourceVersion=1.0.0
+# locator=fixture://synthetic-poams.csv
+# reviewer=Training Content Reviewer
+# asOf=2026-10-06
+# freshnessConfidence=high
+synthetic,id,title,hullId,control,status,risk,due,progress,owner,compartment,mitigation
+true,POAM-SYN-CSV-0001,Synthetic CSV training finding,ddg78,RA-5,Open,high,2026-11-20,30,Training Team,enginerm,Synthetic tabletop remediation only
